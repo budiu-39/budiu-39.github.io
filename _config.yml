@@ -7,7 +7,7 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : " "
+title                    : "Personal Homepage"
 title_separator          : "-"
 name                     : &name "Your Name"
 description              : &description "personal description"
@@ -81,7 +81,7 @@ analytics:
 # Site Author
 author:
   name             : "Junyu Zhang"
-  avatar           : "profile.png"
+  avatar           : "avatar.png"
   bio              : "Postgraduate"
   location         : "Location"
   employer         :
