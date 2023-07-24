@@ -8,4 +8,4 @@ redirect_from:
   - /about.html
 ---
 
-A master students with a strong interest in digital people! :)
+A master students with a strong interest in Digital Human :)
