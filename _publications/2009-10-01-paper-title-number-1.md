@@ -1,4 +1,1 @@
----
-title: "Coming soon"
-collection: publications
----
+Coming soon...
