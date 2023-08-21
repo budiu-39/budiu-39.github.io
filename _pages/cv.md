@@ -17,7 +17,7 @@ Education
 
 Experience
 ======
-Research Intern under Yu Ding, Netease Fuxi Lab, 2023.8-
+* Research Intern under Yu Ding, Netease Fuxi Lab, 2023.8-
 
   
 
