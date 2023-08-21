@@ -9,3 +9,5 @@ redirect_from:
 ---
 
 A master students with a strong interest in Digital Human :)
+  
+From 2023.8 until now, I am a research intern at Netease Fuxi Lab.
