@@ -11,13 +11,13 @@ redirect_from:
 
 Education
 ======
-* B.S. in Southeast University, China 2019-2023
-* M.S. in University of Tübingen, Germany 2023-
+* B.S. in Southeast University, China 2019.8-2023.6
+* M.S. in University of Tübingen, Germany 2023.10-
 
 
-Work experience
+Experience
 ======
-
+Research Intern under Yu Ding, Netease Fuxi Lab, 2023.8-
 
   
 
