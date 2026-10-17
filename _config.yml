@@ -244,6 +244,10 @@ defaults:
       layout: talk
       author_profile: true
       share: true
+  - scope:
+      path: "c181e10e931df1787803800a"
+    values:
+      sitemap: false
 
 # Sass/SCSS
 sass:
