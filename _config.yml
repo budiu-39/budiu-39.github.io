@@ -248,6 +248,10 @@ defaults:
       path: "c181e10e931df1787803800a"
     values:
       sitemap: false
+  - scope:
+      path: "f4e6de6866fecd159cd29d52"
+    values:
+      sitemap: false
 
 # Sass/SCSS
 sass:

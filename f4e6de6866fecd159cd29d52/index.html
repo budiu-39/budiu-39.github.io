@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>&#8203;</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:#f5f6f2;color:#20332e;font:15px/1.6 Inter,"PingFang SC","Noto Sans CJK SC",Arial,sans-serif}
+form{width:min(360px,100%);background:#fff;border:1px solid #dbe3dd;border-radius:10px;padding:28px}
+h1{margin:0 0 18px;font-size:20px}
+input{width:100%;min-height:44px;padding:10px 12px;border:1px solid #c8d4cc;border-radius:6px;font:inherit}
+button{width:100%;min-height:44px;margin-top:12px;border:0;border-radius:6px;background:#16382f;color:#fff;font:600 15px/1 inherit;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}input:focus-visible,button:focus-visible{outline:3px solid #eac388;outline-offset:2px}
+p{min-height:1.6em;margin:12px 0 0;color:#a23b2a;font-size:13px}
+</style></head>
+<body>
+<form id="f" autocomplete="off"><h1>访问口令</h1><input id="pw" type="password" aria-label="访问口令" autofocus><button id="go">进入</button><p id="m" role="status"></p></form>
+<script>
+const SALT='nLv53coWsTHk930RbbZGlg==',ITER=600000,$=id=>document.getElementById(id),te=new TextEncoder();
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const db=(mode,fn)=>new Promise((res,rej)=>{const r=indexedDB.open('gate',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');
+  r.onsuccess=()=>{const tx=r.result.transaction('k',mode),q=fn(tx.objectStore('k'));tx.oncomplete=()=>res(q.result);tx.onerror=()=>rej(tx.error)};r.onerror=()=>rej(r.error)});
+const next=()=>{const n=new URLSearchParams(location.search).get('next');location.replace(n&&n.startsWith('v/')?n:'v/index.html')};
+async function sw(){await navigator.serviceWorker.register('sw.js',{scope:'./'});await navigator.serviceWorker.ready;navigator.serviceWorker.controller?.postMessage('reset')}
+(async()=>{
+  if(!('serviceWorker' in navigator)||!window.indexedDB||!crypto.subtle){$('m').textContent='此浏览器不支持（隐私窗口可能禁用了 Service Worker），请用普通窗口打开。';$('go').disabled=true;return}
+  try{await sw();if(await db('readonly',s=>s.get('keys')))return next()}catch(e){}
+})();
+$('f').onsubmit=async e=>{
+  e.preventDefault();$('go').disabled=true;$('m').textContent='';
+  try{
+    const base=await crypto.subtle.importKey('raw',te.encode($('pw').value.trim()),'PBKDF2',false,['deriveBits']);
+    const bits=new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:Uint8Array.from(atob(SALT),c=>c.charCodeAt(0)),iterations:ITER},base,512));
+    const aes=await crypto.subtle.importKey('raw',bits.slice(0,32),'AES-GCM',false,['decrypt']);
+    const mac=await crypto.subtle.importKey('raw',bits.slice(32),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+    const r=await fetch('x/'+hex(await crypto.subtle.sign('HMAC',mac,te.encode('index.html'))).slice(0,32),{cache:'no-cache'});
+    if(!r.ok)throw 0;const b=new Uint8Array(await r.arrayBuffer());
+    await crypto.subtle.decrypt({name:'AES-GCM',iv:b.slice(0,12)},aes,b.slice(12));
+    await db('readwrite',s=>s.put({aes,mac},'keys'));await sw();next();
+  }catch(err){$('m').textContent='口令不对。';$('go').disabled=false}
+};
+</script>
+</body></html>
